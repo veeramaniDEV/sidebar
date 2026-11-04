@@ -1,0 +1,130 @@
+.app-shell {
+  min-height: 100dvh
+}
+
+.shell-sidebar {
+  position: fixed;
+  left: 0;
+  top: 74px;
+  bottom: 0;
+  width: 250px;
+  z-index: 35;
+  background: #fff;
+  border-right: 1px solid #edf0f7
+}
+
+.shell-content {
+  margin-left: 250px;
+  padding-top: 74px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column
+}
+
+.page-content {
+  flex: 1;
+  min-width: 0;
+  padding: 20px
+}
+
+.sidebar-backdrop {
+  display: none
+}
+
+@media(max-width:1050px) {
+  .shell-sidebar {
+    transform: translateX(-105%);
+    transition: transform .2s ease;
+    box-shadow: 8px 0 35px #13183d18
+  }
+
+  .shell-sidebar.open {
+    transform: translateX(0)
+  }
+
+  .shell-content {
+    margin-left: 0
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 74px 0 0;
+    background: #10163255;
+    border: 0;
+    z-index: 34
+  }
+}
+
+@media(max-width:600px) {
+  .page-content {
+    padding: 12px
+  }
+}
+
+
+/* Chrome, Edge, Safari */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #d8b4fe;
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #9333ea;
+}
+
+
+.sidebar {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  height: calc(100dvh - 64px);
+  z-index: 40;
+  background: white;
+  border-right: 1px solid #e2e8f0;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d8b4fe transparent;
+
+  transform: translateX(-100%);
+  transition: width 250ms ease, transform 250ms ease;
+}
+
+.sidebar.sidebar-open {
+  transform: translateX(0);
+}
+
+.content-wrapper {
+  min-width: 0;
+  transition: padding-left 250ms ease;
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar.sidebar-collapsed {
+    width: 120px;
+  }
+
+  .content-wrapper {
+    padding-left: 250px;
+  }
+
+  .content-wrapper.content-expanded {
+    padding-left: 120px;
+  }
+}

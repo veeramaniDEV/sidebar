@@ -1,0 +1,94 @@
+<section class="dashboard">
+    <div class="welcome-grid">
+        <div class="welcome panel">
+            <div class="welcome-copy">
+                <p>Welcome back,</p>
+                <h1 class="gradient-text">Veera!</h1><span>Here’s what’s happening with your workspace today.</span>
+            </div>
+            <div class="welcome-waves" aria-hidden="true">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="date-card panel">
+            <p><i class="pi pi-calendar"></i> {{today | date:'EEEE, dd MMM yyyy'}}</p>
+            <h2>Let’s make<br />things happen!</h2>
+            <div class="accent-line"></div>
+        </div>
+    </div>
+    <div class="stat-grid">@for(stat of stats;track stat.title){<div class="stat-card panel">
+            <div class="icon-tile" [class.pink]="stat.tone==='pink'"><i [class]="stat.icon"></i></div>
+            <div class="stat-details">
+                <p>{{stat.title}}</p><strong>{{stat.value}}</strong>
+                <div class="change"><span>↗ {{stat.trend}}</span> vs last month</div>
+            </div><svg viewBox="0 0 80 45" aria-hidden="true" class="spark" [class.pink]="stat.tone==='pink'">
+                <polyline [attr.points]="stat.points" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>}</div>
+    <div class="middle-grid">
+        <article class="panel chart-card">
+            <div class="card-heading">
+                <h2>Process Overview</h2>
+                <div class="legend"><span><i class="legend-dot pink-bg"></i>Completed</span><span><i
+                            class="legend-dot purple-bg"></i>In Progress</span></div>
+            </div>
+            <div class="chart-container"><svg viewBox="0 0 680 260" role="img"
+                    aria-label="Demo line chart of completed processes and processes in progress from January to October">
+                    <g class="gridlines">@for(y of [40,85,130,175,220];track y){
+                        <line x1="40" [attr.y1]="y" x2="665" [attr.y2]="y" /><text x="10"
+                            [attr.y]="y+5">{{Math.round((220-y)/5)}}</text>}
+                    </g>
+                    <polyline [attr.points]="chartPoints(completed)" class="line-pink" />
+                    <polyline [attr.points]="chartPoints(inProgress)" class="line-purple" />@for(m of months;track m;let
+                    i=$index){<text class="month" [attr.x]="40+i*67" y="248">{{m}}</text>}
+                </svg></div>
+        </article>
+        <article class="panel tickets-card">
+            <div class="card-heading">
+                <h2>Recent Tickets</h2><a routerLink="/app/tickets">View All <i class="pi pi-angle-right"></i></a>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Created On</th>
+                        </tr>
+                    </thead>
+                    <tbody>@for(ticket of tickets;track ticket.id){<tr>
+                            <td>#{{ticket.id}}</td>
+                            <td>{{ticket.title}}</td>
+                            <td><span class="status" [class.open]="ticket.status==='Open'"
+                                    [class.progress]="ticket.status==='In Progress'"
+                                    [class.resolved]="ticket.status==='Resolved'">{{ticket.status}}</span></td>
+                            <td>{{ticket.date}}</td>
+                        </tr>}</tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+    <div class="bottom-grid">
+        <article class="panel activities-card">
+            <div class="card-heading">
+                <h2>Recent Activities</h2><a routerLink="/app/tickets">View All <i class="pi pi-angle-right"></i></a>
+            </div>
+            <div class="activity-list">@for(activity of activities;track activity.text){<div class="activity"><span
+                        class="activity-dot"></span><span>{{activity.text}}</span><time>{{activity.time}}</time></div>}
+            </div>
+        </article>
+        <article class="panel quick-card">
+            <div class="card-heading">
+                <h2>Quick Actions</h2><a routerLink="/app/processes">View All <i class="pi pi-angle-right"></i></a>
+            </div>
+            <div class="quick-grid">@for(action of actions;track action.text){<a [routerLink]="action.url"
+                    class="quick-action" [class.pink]="action.tone==='pink'"><i
+                        [class]="action.icon"></i><span>{{action.text}}</span></a>}</div>
+        </article>
+    </div>
+    <!-- <p class="demo-disclaimer">Dashboard values are illustrative sample data. Connect your APIs to display live data.
+    </p> -->
+</section>

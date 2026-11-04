@@ -1,0 +1,234 @@
+
+<header class="topbar">
+
+  <!-- ========================================= -->
+  <!-- LOGO AND SIDEBAR TOGGLE -->
+  <!-- ========================================= -->
+
+  <div class="brand-area">
+
+    <a
+      [routerLink]="projectStore.homeRoute()"
+      class="brand"
+      [attr.aria-label]="projectStore.selectedProject().label + ' dashboard'"
+    >
+      <img
+        src="/images/connect-logo.png"
+        alt="CONNECT"
+      />
+    </a>
+
+    <button
+      type="button"
+      class="icon-btn menu-btn"
+      (click)="menuToggle.emit()"
+      [attr.aria-expanded]="menuOpen"
+      aria-controls="main-sidebar"
+      aria-label="Toggle sidebar"
+    >
+      <i class="pi pi-bars" aria-hidden="true"></i>
+    </button>
+
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- TOPBAR RIGHT SECTION -->
+  <!-- ========================================= -->
+
+  <div class="topbar-right">
+
+    <!-- SEARCH -->
+
+    <div class="search">
+
+      <i
+        class="pi pi-search"
+        aria-hidden="true"
+      ></i>
+
+      <input
+        type="search"
+        aria-label="Search workspace"
+        placeholder="Search here..."
+        [value]="query()"
+        (input)="query.set($any($event.target).value)"
+      />
+
+    </div>
+
+
+    <!-- NOTIFICATIONS -->
+
+    <button
+      type="button"
+      class="icon-btn notification"
+      aria-label="Notifications"
+      title="Notifications"
+    >
+      <i class="pi pi-bell" aria-hidden="true"></i>
+      <span class="dot"></span>
+    </button>
+
+
+    <!-- ========================================= -->
+    <!-- SWITCH PROJECT POPUP -->
+    <!-- ========================================= -->
+
+    <div class="project-switch">
+
+      <button
+        type="button"
+        class="switch-trigger"
+        [class.switch-trigger-active]="switchOpen()"
+        [attr.aria-expanded]="switchOpen()"
+        aria-haspopup="true"
+        aria-controls="project-switch-menu"
+        (click)="toggleProjectSwitch()"
+      >
+
+        <span class="switch-icon">
+          <i class="pi pi-sync" aria-hidden="true"></i>
+        </span>
+
+        <span class="switch-label">
+          Switch
+        </span>
+
+        <i
+          class="pi"
+          [class.pi-chevron-up]="switchOpen()"
+          [class.pi-chevron-down]="!switchOpen()"
+          aria-hidden="true"
+        ></i>
+
+      </button>
+
+
+      @if (switchOpen()) {
+
+        <div
+          id="project-switch-menu"
+          class="switch-popup"
+          role="group"
+          aria-label="Switch project"
+        >
+
+          <!-- POPUP TITLE -->
+
+          <div class="switch-popup-title">
+            Switch Project
+          </div>
+
+
+          <!-- CURRENT SELECTED PROJECT -->
+
+          <div class="switch-current">
+
+            <span>Current:</span>
+
+            <strong>
+              {{ projectStore.selectedProject().label }}
+            </strong>
+
+          </div>
+
+
+          <div class="switch-popup-divider"></div>
+
+
+          <!-- OTHER AVAILABLE PROJECTS -->
+
+          @for (
+            project of projectStore.otherProjects();
+            track project.id
+          ) {
+
+            <button
+              type="button"
+              class="switch-project-item"
+              (click)="selectProject(project.id)"
+            >
+
+              <i
+                [class]="project.icon"
+                aria-hidden="true"
+              ></i>
+
+              <span>
+                {{ project.label }}
+              </span>
+
+              <i
+                class="pi pi-angle-right switch-arrow"
+                aria-hidden="true"
+              ></i>
+
+            </button>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- USER PROFILE -->
+    <!-- ========================================= -->
+
+    <div class="profile">
+
+      <button
+        type="button"
+        class="profile-trigger"
+        (click)="toggleProfile()"
+        [attr.aria-expanded]="profileOpen()"
+        aria-label="User menu"
+      >
+
+        <span class="avatar">
+          VA
+        </span>
+
+        <span class="profile-name">
+          Veera
+        </span>
+
+        <i
+          class="pi pi-angle-down"
+          aria-hidden="true"
+        ></i>
+
+      </button>
+
+
+      @if (profileOpen()) {
+
+        <div class="profile-menu">
+
+          <a
+            [routerLink]="projectStore.homeRoute()"
+            (click)="profileOpen.set(false)"
+          >
+            Project Home
+          </a>
+
+          <a
+            routerLink="/login"
+            (click)="profileOpen.set(false)"
+          >
+            Sign out (demo)
+          </a>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</header>

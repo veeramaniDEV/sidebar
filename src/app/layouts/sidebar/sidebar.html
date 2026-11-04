@@ -1,0 +1,265 @@
+<nav
+  class="sidebar-nav"
+  [class.sidebar-collapsed]="collapsed"
+  aria-label="Application navigation"
+>
+
+  @if (projectStore.selectedProject(); as project) {
+
+    <!-- ==================================== -->
+    <!-- EXPANDED SIDEBAR -->
+    <!-- ==================================== -->
+
+    @if (!collapsed) {
+
+      <div class="selected-project-header">
+
+        <i
+          [class]="project.icon"
+          aria-hidden="true"
+        ></i>
+
+        <span>
+          {{ project.label }}
+        </span>
+
+      </div>
+
+      <div class="project-content">
+
+        <ng-container
+          [ngTemplateOutlet]="menuTree"
+          [ngTemplateOutletContext]="{
+            items: project.items,
+            depth: 0,
+            ancestors: []
+          }"
+        ></ng-container>
+
+      </div>
+
+    } @else {
+
+      <!-- ================================== -->
+      <!-- COLLAPSED SIDEBAR -->
+      <!-- ================================== -->
+
+      <div class="collapsed-project">
+
+        <button
+          #projectOrigin="cdkOverlayOrigin"
+          cdkOverlayOrigin
+          type="button"
+          class="project-header project-header-active"
+          [attr.title]="project.label"
+          [attr.aria-label]="'Open ' + project.label + ' menu'"
+          [attr.aria-expanded]="flyoutOpen()"
+          (click)="toggleFlyout(projectOrigin)"
+        >
+
+          <i
+            [class]="project.icon"
+            class="project-icon"
+            aria-hidden="true"
+          ></i>
+
+          <span class="project-label">
+            {{ project.label }}
+          </span>
+
+        </button>
+
+        <!-- CDK FLOATING MENU -->
+
+        @if (flyoutOrigin(); as origin) {
+
+          <ng-template
+            cdkConnectedOverlay
+            [cdkConnectedOverlayOrigin]="origin"
+            [cdkConnectedOverlayPositions]="flyoutPositions"
+            [cdkConnectedOverlayOpen]="flyoutOpen()"
+            [cdkConnectedOverlayPush]="true"
+            [cdkConnectedOverlayViewportMargin]="12"
+            [cdkConnectedOverlayPanelClass]="'connect-sidebar-overlay'"
+            (overlayOutsideClick)="closeFlyout()"
+            (overlayKeydown)="
+              $event.key === 'Escape' && closeFlyout()
+            "
+          >
+
+            <div class="sidebar-flyout">
+
+              <div class="flyout-header">
+
+                <i
+                  [class]="project.icon"
+                  aria-hidden="true"
+                ></i>
+
+                <span>
+                  {{ project.label }}
+                </span>
+
+                <button
+                  type="button"
+                  class="flyout-close"
+                  aria-label="Close submenu"
+                  (click)="closeFlyout()"
+                >
+                  <i class="pi pi-times"></i>
+                </button>
+
+              </div>
+
+              <div class="flyout-body">
+
+                <ng-container
+                  [ngTemplateOutlet]="menuTree"
+                  [ngTemplateOutletContext]="{
+                    items: project.items,
+                    depth: 0,
+                    ancestors: []
+                  }"
+                ></ng-container>
+
+              </div>
+
+            </div>
+
+          </ng-template>
+
+        }
+
+      </div>
+
+    }
+
+  }
+
+</nav>
+
+
+<!-- ========================================= -->
+<!-- COMMON RECURSIVE MENU -->
+<!-- ========================================= -->
+
+<ng-template
+  #menuTree
+  let-items="items"
+  let-depth="depth"
+  let-ancestors="ancestors"
+>
+
+  <ul
+    class="menu-list"
+    [class.nested-menu]="depth > 0"
+  >
+
+    @for (item of items; track item.id) {
+
+      <li class="menu-item">
+
+        @if (item.children?.length) {
+
+          <!-- PARENT MENU -->
+
+          <button
+            type="button"
+            class="menu-link menu-parent"
+            [class.menu-expanded]="isMenuOpen(item.id)"
+            [attr.aria-expanded]="isMenuOpen(item.id)"
+            [attr.aria-controls]="submenuId(item.id)"
+            (click)="toggleMenu(item, ancestors)"
+          >
+
+            <i
+              [class]="item.icon || 'pi pi-folder'"
+              class="menu-icon"
+              aria-hidden="true"
+            ></i>
+
+            <span class="menu-label">
+              {{ item.label }}
+            </span>
+
+            <i
+              class="pi menu-chevron"
+              [class.pi-chevron-down]="isMenuOpen(item.id)"
+              [class.pi-chevron-right]="!isMenuOpen(item.id)"
+              aria-hidden="true"
+            ></i>
+
+          </button>
+
+          @if (isMenuOpen(item.id)) {
+
+            <div
+              class="submenu-wrapper"
+              [id]="submenuId(item.id)"
+            >
+
+              <ng-container
+                [ngTemplateOutlet]="menuTree"
+                [ngTemplateOutletContext]="{
+                  items: item.children,
+                  depth: depth + 1,
+                  ancestors: getChildAncestors(
+                    ancestors,
+                    item.id
+                  )
+                }"
+              ></ng-container>
+
+            </div>
+
+          }
+
+        } @else {
+
+          <!-- FINAL CLICKABLE MENU -->
+
+          <a
+            class="menu-link menu-leaf"
+            [routerLink]="item.route"
+            routerLinkActive="menu-active"
+            [routerLinkActiveOptions]="{
+              exact: true
+            }"
+            ariaCurrentWhenActive="page"
+            (click)="onMenuSelected()"
+          >
+
+            <i
+              [class]="item.icon || 'pi pi-circle'"
+              class="menu-icon"
+              aria-hidden="true"
+            ></i>
+
+            <span class="menu-label">
+              {{ item.label }}
+            </span>
+
+          </a>
+
+        }
+
+      </li>
+
+    }
+
+  </ul>
+
+</ng-template>
+
+
+<!-- SIDEBAR DECORATIVE BACKGROUND -->
+
+<div class="sidebar-art" aria-hidden="true">
+
+  <div class="art-wave wave-one"></div>
+
+  <div class="art-wave wave-two"></div>
+
+  <div class="art-wave wave-three"></div>
+
+</div>

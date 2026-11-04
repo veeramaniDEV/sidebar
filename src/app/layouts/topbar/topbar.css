@@ -1,0 +1,412 @@
+.topbar {
+    height: 70px;
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid #edf0f7;
+    box-shadow: 0 2px 20px #24214c06
+}
+
+.brand-area {
+    width: 250px;
+    flex: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 0 16px;
+    border-right: 1px solid #f0f1f8
+}
+
+.brand img {
+    width: 166px;
+    height: auto;
+    display: block
+}
+
+.icon-btn {
+    height: 40px;
+    width: 40px;
+    border: 0;
+    background: transparent;
+    border-radius: 12px;
+    color: #151d46;
+    font-size: 21px;
+    position: relative
+}
+
+.icon-btn:hover {
+    background: #f5f0ff
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 26px;
+    flex: 1
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    width: min(420px, 100%);
+    height: 46px;
+    border-radius: 28px;
+    background: #f5f6fc;
+    color: #475478;
+    padding: 0 20px
+}
+
+.search input {
+    background: transparent;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    font-size: 14px;
+    color: #222b4d
+}
+
+.search input::placeholder {
+    color: #8893b1
+}
+
+.notification {
+    margin-left: auto
+}
+
+.dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ff2398;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    right: 7px;
+    top: 4px
+}
+
+.profile {
+    position: relative
+}
+
+.profile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: none;
+    border: 0;
+    color: #172043;
+    font-weight: 650
+}
+
+.avatar {
+    height: 32px;
+    width: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fe2c9e, #6d24e6);
+    color: white;
+    font-size: 14px;
+    font-weight: 700
+}
+
+.profile-menu {
+    position: absolute;
+    right: 0;
+    top: 53px;
+    background: white;
+    box-shadow: 0 12px 35px #15153a24;
+    border: 1px solid #ededf8;
+    border-radius: 12px;
+    min-width: 175px;
+    padding: 6px
+}
+
+.profile-menu a {
+    display: block;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px
+}
+
+.profile-menu a:hover {
+    background: #f7efff
+}
+
+@media(max-width:1050px) {
+    .brand-area {
+        width: auto;
+        border: 0;
+        padding: 0 12px 0 18px
+    }
+
+    .topbar-right {
+        padding: 0 16px
+    }
+
+    .brand img {
+        width: 145px
+    }
+}
+
+@media(max-width:620px) {
+    .search {
+        display: none
+    }
+
+    .profile-name {
+        display: none
+    }
+
+    .topbar-right {
+        gap: 9px
+    }
+
+    .brand img {
+        width: 124px
+    }
+
+    .brand-area {
+        gap: 4px
+    }
+
+    .avatar {
+        width: 37px;
+        height: 37px
+    }
+}
+
+
+/* ==========================================
+   PROJECT SWITCH
+========================================== */
+
+.project-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Switch button */
+
+.switch-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    height: 42px;
+    padding: 0 12px;
+
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+
+    color: #172043;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.switch-trigger:hover,
+.switch-trigger-active {
+    background: #f5f0ff;
+    color: #7c3aed;
+}
+
+.switch-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+
+    background: linear-gradient(
+      135deg,
+      #fe2c9e,
+      #6d24e6);
+    color: white;
+}
+
+.switch-trigger > .pi {
+    font-size: 11px;
+}
+
+/* ==========================================
+   FLOATING POPUP
+========================================== */
+
+.switch-popup {
+    position: absolute;
+
+    top: calc(100% + 10px);
+    right: 0;
+
+    width: 260px;
+    min-width: 260px;
+
+    padding: 10px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    box-shadow:
+        0 12px 35px rgba(15, 23, 42, 0.16),
+        0 4px 10px rgba(15, 23, 42, 0.05);
+
+    z-index: 2000;
+    box-sizing: border-box;
+
+    animation: switchPopupOpen 150ms ease-out;
+}
+
+/* Small top arrow */
+
+.switch-popup::before {
+    content: "";
+
+    position: absolute;
+    top: -6px;
+    right: 28px;
+
+    width: 11px;
+    height: 11px;
+
+    background: white;
+    border-left: 1px solid #e5e7eb;
+    border-top: 1px solid #e5e7eb;
+
+    transform: rotate(45deg);
+}
+
+/* Popup heading */
+
+.switch-popup-title {
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #172043;
+}
+
+/* Current project */
+
+.switch-current {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 9px 10px;
+    margin-bottom: 7px;
+
+    font-size: 12px;
+    color: #64748b;
+
+    background: #f8f5ff;
+    border-radius: 8px;
+}
+
+.switch-current strong {
+    color: #7c3aed;
+}
+
+.switch-popup-divider {
+    height: 1px;
+    background: #edf0f7;
+    margin: 8px 0;
+}
+
+/* Project list */
+
+.switch-project-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+
+    color: #344054;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+
+    cursor: pointer;
+    transition: background 150ms ease;
+}
+
+.switch-project-item:hover {
+    background: #f5f3ff;
+    color: #7c3aed;
+}
+
+.switch-project-item > i:first-child {
+    width: 20px;
+    flex-shrink: 0;
+    font-size: 17px;
+    color: #7c3aed;
+}
+
+.switch-project-item span {
+    flex: 1;
+}
+
+.switch-arrow {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.switch-project-item:focus-visible,
+.switch-trigger:focus-visible {
+    outline: 2px solid #8b5cf6;
+    outline-offset: 2px;
+}
+
+/* Animation */
+
+@keyframes switchPopupOpen {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Small screens */
+
+@media (max-width: 620px) {
+    .switch-label {
+        display: none;
+    }
+
+    .switch-popup {
+        width: min(260px, calc(100vw - 24px));
+        min-width: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .switch-popup {
+        animation: none;
+    }
+}

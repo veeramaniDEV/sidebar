@@ -1,0 +1,101 @@
+@import "primeicons/primeicons.css";
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+
+:root {
+    --ink: #111537;
+    --muted: #697594;
+    --pink: #f51b98;
+    --purple: #6322db;
+    --violet: #8339f1;
+    --line: #e9eaf5;
+    --surface: #fff;
+    --bg: #f7f8fe;
+    --shadow: 0 8px 32px rgba(28, 25, 93, .055)
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg)
+}
+
+button,
+input {
+    font: inherit
+}
+
+button {
+    cursor: pointer
+}
+
+a {
+    text-decoration: none;
+    color: inherit
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 3px
+}
+
+.gradient-text {
+    background: linear-gradient(105deg, #5d21da, #a432cf, #f51b98);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent
+}
+
+.panel {
+    background: white;
+    border: 1px solid #ebeef8;
+    border-radius: 17px;
+    box-shadow: var(--shadow)
+}
+
+.icon-tile {
+    height: 50px;
+    width: 50px;
+    display: grid;
+    place-items: center;
+    border-radius: 15px;
+    background: #f2e9ff;
+    color: #7225e3;
+    flex-shrink: 0
+}
+
+.icon-tile.pink {
+    background: #ffe9f6;
+    color: var(--pink)
+}
+
+.pill {
+    border-radius: 99px;
+    padding: 5px 10px;
+    font-weight: 650;
+    font-size: 12px
+}
+
+.pill.good {
+    background: #e2f9ee;
+    color: #00ad72
+}
+
+.pill.bad {
+    background: #ffe8f0;
+    color: #ef2680
+}
+
+.pill.neutral {
+    background: #f0f1f6;
+    color: #727b93
+}

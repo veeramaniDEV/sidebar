@@ -1,0 +1,295 @@
+.login-page {
+    display: grid;
+    grid-template-columns: 48% 52%;
+    min-height: 100dvh;
+    background: #fff
+}
+
+.login-brand-panel {
+    min-height: 100dvh;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle at 10% 0, #7130e4 0, transparent 36%), linear-gradient(135deg, #24096b 0%, #3c0e91 42%, #7c1ac5 76%, #c61ab1 120%);
+    color: white
+}
+
+.brand-inner {
+    min-height: 100dvh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 60px clamp(32px, 6vw, 106px)
+}
+
+.login-brand {
+    display: inline-flex;
+    max-width: 300px;
+    z-index: 1
+}
+
+.login-brand img {
+    width: min(100%, 280px);
+    height: auto;
+}
+
+.brand-message {
+    position: relative;
+    z-index: 2;
+    margin: auto 0;
+    max-width: 530px
+}
+
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-weight: 750;
+    color: #f6c3ff
+}
+
+.brand-message h1 {
+    font-size: clamp(38px, 3.8vw, 65px);
+    letter-spacing: -2.5px;
+    line-height: 1.12;
+    margin: 22px 0
+}
+
+.brand-message p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #e7dbff;
+    max-width: 430px
+}
+
+.brand-bottom {
+    z-index: 2;
+    color: #dfcafd;
+    font-size: 13px
+}
+
+.login-wave {
+    position: absolute;
+    inset: auto -70px 0 -80px;
+    height: 35%;
+    opacity: .75;
+    pointer-events: none
+}
+
+.login-wave span {
+    position: absolute;
+    left: -10%;
+    bottom: -110px;
+    width: 115%;
+    height: 220px;
+    border-radius: 50%;
+    border: 2px solid #f684f7;
+    transform: rotate(-11deg);
+    box-shadow: 0 -25px 0 -23px #d279ff, 0 -48px 0 -46px #d279ff, 0 -72px 0 -70px #d279ff
+}
+
+.login-wave span:nth-child(2) {
+    bottom: -75px;
+    transform: rotate(10deg);
+    border-color: #b789ff
+}
+
+.login-wave span:nth-child(3) {
+    bottom: -35px;
+    transform: rotate(-16deg);
+    border-color: #ff64ba
+}
+
+.login-wave span:nth-child(4) {
+    bottom: 10px;
+    transform: rotate(13deg);
+    border-color: #955cff
+}
+
+.login-form-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle at 110% -18%, #f6e6ff 0, transparent 35%), radial-gradient(circle at -25% 115%, #fae7ff 0, transparent 40%), #fff
+}
+
+.login-form-wrap {
+    width: min(100%, 480px);
+    z-index: 1
+}
+
+.mobile-brand {
+    display: none
+}
+
+.login-kicker {
+    letter-spacing: 2px;
+    font-size: 12px;
+    font-weight: 750;
+    color: #8329d2
+}
+
+.login-form-wrap h2 {
+    font-size: clamp(38px, 3vw, 53px);
+    letter-spacing: -1.8px;
+    margin: 12px 0 7px;
+    color: #10183c
+}
+
+.subtitle {
+    color: #7a83a0;
+    font-size: 17px;
+    margin: 0 0 40px
+}
+
+.field {
+    margin-bottom: 22px
+}
+
+.field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 650;
+    margin-bottom: 10px;
+    color: #27304f
+}
+
+.input-wrap {
+    height: 57px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    border: 1px solid #dfe3ef;
+    border-radius: 12px;
+    padding: 0 17px;
+    transition: .2s;
+    background: white
+}
+
+.input-wrap:focus-within {
+    border-color: #9b50e8;
+    box-shadow: 0 0 0 3px #9c4ce814
+}
+
+.input-wrap>i {
+    font-size: 19px;
+    color: #828da8
+}
+
+.input-wrap input {
+    border: 0;
+    outline: 0;
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    color: #1b2144;
+    font-size: 15px
+}
+
+.input-wrap input::placeholder {
+    color: #a5acc0
+}
+
+.eye-btn {
+    background: none;
+    border: 0;
+    color: #74809f;
+    font-size: 18px
+}
+
+.error {
+    display: block;
+    color: #e91b76;
+    margin-top: 7px;
+    font-size: 12px
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin: 8px 0 30px;
+    font-size: 13px
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.remember input {
+    width: 16px;
+    height: 16px;
+    accent-color: #7e28d9
+}
+
+.form-options a,
+.contact a {
+    color: #7a24de;
+    font-weight: 650
+}
+
+.sign-in {
+    width: 100%;
+    height: 58px;
+    border: 0;
+    border-radius: 12px;
+    color: white;
+    background: linear-gradient(100deg, #6a25de, #b12bbd, #f31c98);
+    font-weight: 750;
+    font-size: 16px;
+    box-shadow: 0 12px 25px #ad36c72b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px
+}
+
+.sign-in:hover {
+    filter: brightness(1.06)
+}
+
+.contact {
+    margin: 28px 0 0;
+    text-align: center;
+    color: #7b859e;
+    font-size: 13px
+}
+
+.demo-note {
+    text-align: center;
+    font-size: 11px;
+    margin-top: 22px;
+    color: #a1a7b6
+}
+
+@media(max-width:820px) {
+    .login-page {
+        grid-template-columns: 1fr
+    }
+
+    .login-brand-panel {
+        display: none
+    }
+
+    .login-form-panel {
+        min-height: 100dvh;
+        padding: 36px 22px
+    }
+
+    .mobile-brand {
+        display: block;
+        margin-bottom: 35px
+    }
+
+    .mobile-brand img {
+        width: 180px
+    }
+
+    .login-form-wrap h2 {
+        font-size: 40px
+    }
+}
