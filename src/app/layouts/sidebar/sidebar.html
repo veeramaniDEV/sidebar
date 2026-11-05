@@ -1,3 +1,4 @@
+
 <nav
   class="sidebar-nav"
   [class.sidebar-collapsed]="collapsed"
@@ -12,6 +13,8 @@
 
     @if (!collapsed) {
 
+      <!-- SELECTED PROJECT HEADER -->
+
       <div class="selected-project-header">
 
         <i
@@ -25,12 +28,14 @@
 
       </div>
 
+      <!-- PROJECT MENU CONTENT -->
+
       <div class="project-content">
 
         <ng-container
           [ngTemplateOutlet]="menuTree"
           [ngTemplateOutletContext]="{
-            items: project.items,
+            items: projectStore.visibleItems(),
             depth: 0,
             ancestors: []
           }"
@@ -52,8 +57,11 @@
           type="button"
           class="project-header project-header-active"
           [attr.title]="project.label"
-          [attr.aria-label]="'Open ' + project.label + ' menu'"
+          [attr.aria-label]="
+            'Open ' + project.label + ' menu'
+          "
           [attr.aria-expanded]="flyoutOpen()"
+          aria-haspopup="true"
           (click)="toggleFlyout(projectOrigin)"
         >
 
@@ -89,6 +97,8 @@
 
             <div class="sidebar-flyout">
 
+              <!-- FLYOUT HEADER -->
+
               <div class="flyout-header">
 
                 <i
@@ -106,17 +116,24 @@
                   aria-label="Close submenu"
                   (click)="closeFlyout()"
                 >
-                  <i class="pi pi-times"></i>
+
+                  <i
+                    class="pi pi-times"
+                    aria-hidden="true"
+                  ></i>
+
                 </button>
 
               </div>
+
+              <!-- FLYOUT MENU -->
 
               <div class="flyout-body">
 
                 <ng-container
                   [ngTemplateOutlet]="menuTree"
                   [ngTemplateOutletContext]="{
-                    items: project.items,
+                    items: projectStore.visibleItems(),
                     depth: 0,
                     ancestors: []
                   }"
@@ -138,7 +155,6 @@
 
 </nav>
 
-
 <!-- ========================================= -->
 <!-- COMMON RECURSIVE MENU -->
 <!-- ========================================= -->
@@ -159,9 +175,11 @@
 
       <li class="menu-item">
 
-        @if (item.children?.length) {
+        <!-- ================================== -->
+        <!-- PARENT MENU -->
+        <!-- ================================== -->
 
-          <!-- PARENT MENU -->
+        @if (item.children?.length) {
 
           <button
             type="button"
@@ -169,6 +187,7 @@
             [class.menu-expanded]="isMenuOpen(item.id)"
             [attr.aria-expanded]="isMenuOpen(item.id)"
             [attr.aria-controls]="submenuId(item.id)"
+            [attr.title]="item.label"
             (click)="toggleMenu(item, ancestors)"
           >
 
@@ -190,6 +209,8 @@
             ></i>
 
           </button>
+
+          <!-- EXPANDED SUBMENU -->
 
           @if (isMenuOpen(item.id)) {
 
@@ -216,30 +237,37 @@
 
         } @else {
 
+          <!-- ================================== -->
           <!-- FINAL CLICKABLE MENU -->
+          <!-- ================================== -->
 
-          <a
-            class="menu-link menu-leaf"
-            [routerLink]="item.route"
-            routerLinkActive="menu-active"
-            [routerLinkActiveOptions]="{
-              exact: true
-            }"
-            ariaCurrentWhenActive="page"
-            (click)="onMenuSelected()"
-          >
+          @if (item.route) {
 
-            <i
-              [class]="item.icon || 'pi pi-circle'"
-              class="menu-icon"
-              aria-hidden="true"
-            ></i>
+            <a
+              class="menu-link menu-leaf"
+              [routerLink]="item.route"
+              routerLinkActive="menu-active"
+              [routerLinkActiveOptions]="{
+                exact: true
+              }"
+              ariaCurrentWhenActive="page"
+              [attr.title]="item.label"
+              (click)="onMenuSelected()"
+            >
 
-            <span class="menu-label">
-              {{ item.label }}
-            </span>
+              <i
+                [class]="item.icon || 'pi pi-circle'"
+                class="menu-icon"
+                aria-hidden="true"
+              ></i>
 
-          </a>
+              <span class="menu-label">
+                {{ item.label }}
+              </span>
+
+            </a>
+
+          }
 
         }
 
@@ -251,10 +279,14 @@
 
 </ng-template>
 
+<!-- ========================================= -->
+<!-- ORIGINAL CONNECT DECORATIVE WAVES -->
+<!-- ========================================= -->
 
-<!-- SIDEBAR DECORATIVE BACKGROUND -->
-
-<div class="sidebar-art" aria-hidden="true">
+<div
+  class="sidebar-art"
+  aria-hidden="true"
+>
 
   <div class="art-wave wave-one"></div>
 

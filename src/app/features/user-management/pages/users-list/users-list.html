@@ -1,0 +1,775 @@
+
+<section class="users-page">
+
+  <!-- ===================================== -->
+  <!-- PAGE HEADER -->
+  <!-- ===================================== -->
+
+  <div class="page-header">
+
+    <div class="page-heading">
+      <div class="page-eyebrow">
+        CONNECT / Settings
+      </div>
+
+      <h1>User Management</h1>
+
+      <p>
+        Manage users, roles, and account access
+        across your workspace.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="openAddUser()"
+    >
+      <i class="pi pi-plus"></i>
+      <span>Add User</span>
+    </button>
+
+  </div>
+
+  <!-- ===================================== -->
+  <!-- SUCCESS MESSAGE -->
+  <!-- ===================================== -->
+
+  @if (successMessage()) {
+
+    <div class="success-alert" role="status">
+
+      <div class="alert-content">
+        <i class="pi pi-check-circle"></i>
+
+        <span>
+          {{ successMessage() }}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="alert-close"
+        aria-label="Dismiss message"
+        (click)="dismissMessage()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+
+    </div>
+
+  }
+
+  <!-- ===================================== -->
+  <!-- USER STATISTICS -->
+  <!-- ===================================== -->
+
+  <div class="stats-grid">
+
+    <!-- TOTAL USERS -->
+
+    <div class="stat-card">
+
+      <div class="stat-info">
+        <span class="stat-label">Total Users</span>
+
+        <strong>{{ totalUsers() }}</strong>
+
+        <span class="stat-caption">
+          Registered accounts
+        </span>
+      </div>
+
+      <div class="stat-icon total-icon">
+        <i class="pi pi-users"></i>
+      </div>
+
+    </div>
+
+    <!-- ACTIVE USERS -->
+
+    <div class="stat-card">
+
+      <div class="stat-info">
+        <span class="stat-label">Active Users</span>
+
+        <strong>{{ activeUsers() }}</strong>
+
+        <span class="stat-caption">
+          Currently enabled
+        </span>
+      </div>
+
+      <div class="stat-icon active-icon">
+        <i class="pi pi-user"></i>
+      </div>
+
+    </div>
+
+    <!-- INACTIVE USERS -->
+
+    <div class="stat-card">
+
+      <div class="stat-info">
+        <span class="stat-label">Inactive Users</span>
+
+        <strong>{{ inactiveUsers() }}</strong>
+
+        <span class="stat-caption">
+          Currently disabled
+        </span>
+      </div>
+
+      <div class="stat-icon inactive-icon">
+        <i class="pi pi-user-minus"></i>
+      </div>
+
+    </div>
+
+    <!-- ADMIN USERS -->
+
+    <div class="stat-card">
+
+      <div class="stat-info">
+        <span class="stat-label">Administrators</span>
+
+        <strong>{{ adminUsers() }}</strong>
+
+        <span class="stat-caption">
+          Admin-level accounts
+        </span>
+      </div>
+
+      <div class="stat-icon admin-icon">
+        <i class="pi pi-shield"></i>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===================================== -->
+  <!-- USERS TABLE CARD -->
+  <!-- ===================================== -->
+
+  <div class="users-card">
+
+    <!-- CARD HEADER -->
+
+    <div class="card-heading">
+
+      <div>
+        <h2>Users List</h2>
+
+        <p>
+          View and manage workspace users.
+        </p>
+      </div>
+
+      <span class="users-count">
+        {{ filteredUsers().length }} users
+      </span>
+
+    </div>
+
+    <!-- =================================== -->
+    <!-- FILTERS -->
+    <!-- =================================== -->
+
+    <div class="filter-bar">
+
+      <!-- SEARCH -->
+
+      <div class="table-search">
+
+        <i class="pi pi-search"></i>
+
+        <input
+          type="search"
+          placeholder="Search users by name, email..."
+          aria-label="Search users"
+          [value]="searchText()"
+          (input)="updateSearch($any($event.target).value)"
+        />
+
+      </div>
+
+      <!-- ROLE FILTER -->
+
+      <div class="filter-select">
+
+        <select
+          aria-label="Filter by role"
+          [value]="selectedRole()"
+          (change)="updateRole($any($event.target).value)"
+        >
+          <option value="All">All Roles</option>
+
+          @for (role of roles; track role) {
+            <option [value]="role">
+              {{ role }}
+            </option>
+          }
+        </select>
+
+        <i class="pi pi-chevron-down"></i>
+
+      </div>
+
+      <!-- STATUS FILTER -->
+
+      <div class="filter-select">
+
+        <select
+          aria-label="Filter by status"
+          [value]="selectedStatus()"
+          (change)="updateStatus($any($event.target).value)"
+        >
+          <option value="All">All Status</option>
+
+          @for (status of statuses; track status) {
+            <option [value]="status">
+              {{ status }}
+            </option>
+          }
+        </select>
+
+        <i class="pi pi-chevron-down"></i>
+
+      </div>
+
+      <!-- CLEAR FILTERS -->
+
+      <button
+        type="button"
+        class="btn btn-secondary clear-filter"
+        (click)="clearFilters()"
+      >
+        <i class="pi pi-filter-slash"></i>
+        Clear
+      </button>
+
+    </div>
+
+    <!-- =================================== -->
+    <!-- TABLE -->
+    <!-- =================================== -->
+
+    <div class="table-container">
+
+      <table class="users-table">
+
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Created On</th>
+            <th class="actions-heading">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (user of paginatedUsers(); track user.id) {
+
+            <tr>
+
+              <!-- USER -->
+
+              <td>
+
+                <div class="user-cell">
+
+                  <div class="user-avatar">
+                    {{ getInitials(user.name) }}
+                  </div>
+
+                  <div class="user-details">
+
+                    <strong>{{ user.name }}</strong>
+
+                    <span>{{ user.email }}</span>
+
+                    <small>ID: {{ user.id }}</small>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+              <!-- ROLE -->
+
+              <td>
+
+                <span
+                  class="role-badge"
+                  [class.role-admin]="user.role === 'Admin'"
+                  [class.role-manager]="user.role === 'Manager'"
+                  [class.role-user]="user.role === 'User'"
+                >
+                  {{ user.role }}
+                </span>
+
+              </td>
+
+              <!-- DEPARTMENT -->
+
+              <td>
+                <span class="department-text">
+                  {{ user.department }}
+                </span>
+              </td>
+
+              <!-- STATUS -->
+
+              <td>
+
+                <span
+                  class="status-badge"
+                  [class.status-active]="user.status === 'Active'"
+                  [class.status-inactive]="user.status === 'Inactive'"
+                >
+                  <span class="status-dot"></span>
+
+                  {{ user.status }}
+                </span>
+
+              </td>
+
+              <!-- CREATED DATE -->
+
+              <td>
+                <span class="date-text">
+                  {{ user.createdOn | date:'dd MMM yyyy' }}
+                </span>
+              </td>
+
+              <!-- ACTIONS -->
+
+              <td>
+
+                <div class="table-actions">
+
+                  <button
+                    type="button"
+                    class="action-btn edit-btn"
+                    [attr.aria-label]="'Edit ' + user.name"
+                    title="Edit user"
+                    (click)="openEditUser(user)"
+                  >
+                    <i class="pi pi-pencil"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="action-btn status-btn"
+                    [attr.aria-label]="
+                      (user.status === 'Active'
+                        ? 'Deactivate '
+                        : 'Activate ') + user.name
+                    "
+                    [title]="
+                      user.status === 'Active'
+                        ? 'Deactivate user'
+                        : 'Activate user'
+                    "
+                    (click)="toggleUserStatus(user)"
+                  >
+                    <i
+                      class="pi"
+                      [class.pi-lock]="user.status === 'Active'"
+                      [class.pi-lock-open]="user.status === 'Inactive'"
+                    ></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="action-btn delete-btn"
+                    [attr.aria-label]="'Delete ' + user.name"
+                    title="Delete user"
+                    (click)="confirmDelete(user)"
+                  >
+                    <i class="pi pi-trash"></i>
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          } @empty {
+
+            <tr>
+              <td colspan="6">
+
+                <div class="empty-state">
+
+                  <i class="pi pi-users"></i>
+
+                  <h3>No users found</h3>
+
+                  <p>
+                    Try changing your search or filter criteria.
+                  </p>
+
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="clearFilters()"
+                  >
+                    Clear Filters
+                  </button>
+
+                </div>
+
+              </td>
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- =================================== -->
+    <!-- TABLE FOOTER -->
+    <!-- =================================== -->
+
+    <div class="table-footer">
+
+      <div class="table-results">
+        Showing
+        <strong>{{ pageStart() }}</strong>
+        to
+        <strong>{{ pageEnd() }}</strong>
+        of
+        <strong>{{ filteredUsers().length }}</strong>
+        users
+      </div>
+
+      <div class="pagination">
+
+        <button
+          type="button"
+          class="page-btn"
+          aria-label="Previous page"
+          [disabled]="currentPage() <= 1"
+          (click)="previousPage()"
+        >
+          <i class="pi pi-chevron-left"></i>
+        </button>
+
+        <span class="page-indicator">
+          {{ currentPage() }} / {{ totalPages() }}
+        </span>
+
+        <button
+          type="button"
+          class="page-btn"
+          aria-label="Next page"
+          [disabled]="currentPage() >= totalPages()"
+          (click)="nextPage()"
+        >
+          <i class="pi pi-chevron-right"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================= -->
+<!-- ADD / EDIT USER MODAL -->
+<!-- ========================================= -->
+
+@if (showUserModal()) {
+
+  <div
+    class="modal-backdrop"
+    (click)="closeUserModal()"
+  >
+
+    <section
+      class="user-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="user-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- MODAL HEADER -->
+
+      <div class="modal-header">
+
+        <div>
+          <h2 id="user-modal-title">
+            {{ editingUserId() === null
+              ? 'Add New User'
+              : 'Edit User' }}
+          </h2>
+
+          <p>
+            Enter the user's account information.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="modal-close"
+          aria-label="Close user form"
+          (click)="closeUserModal()"
+        >
+          <i class="pi pi-times"></i>
+        </button>
+
+      </div>
+
+      <!-- MODAL BODY -->
+
+      <form
+        class="user-form"
+        (submit)="
+          $event.preventDefault();
+          saveUser()
+        "
+      >
+
+        @if (formError()) {
+
+          <div class="form-error" role="alert">
+            <i class="pi pi-exclamation-circle"></i>
+            {{ formError() }}
+          </div>
+
+        }
+
+        <div class="form-grid">
+
+          <!-- FULL NAME -->
+
+          <div class="form-field full-width">
+
+            <label for="user-name">
+              Full Name <span>*</span>
+            </label>
+
+            <input
+              id="user-name"
+              type="text"
+              name="name"
+              placeholder="Enter full name"
+              maxlength="100"
+              required
+              [value]="userForm().name"
+              (input)="updateFormField(
+                'name',
+                $any($event.target).value
+              )"
+            />
+
+          </div>
+
+          <!-- EMAIL -->
+
+          <div class="form-field full-width">
+
+            <label for="user-email">
+              Email Address <span>*</span>
+            </label>
+
+            <input
+              id="user-email"
+              type="email"
+              name="email"
+              placeholder="Enter email address"
+              maxlength="150"
+              required
+              [value]="userForm().email"
+              (input)="updateFormField(
+                'email',
+                $any($event.target).value
+              )"
+            />
+
+          </div>
+
+          <!-- ROLE -->
+
+          <div class="form-field">
+
+            <label for="user-role">
+              User Role
+            </label>
+
+            <select
+              id="user-role"
+              name="role"
+              [value]="userForm().role"
+              (change)="updateFormField(
+                'role',
+                $any($event.target).value
+              )"
+            >
+              @for (role of roles; track role) {
+                <option [value]="role">
+                  {{ role }}
+                </option>
+              }
+            </select>
+
+          </div>
+
+          <!-- DEPARTMENT -->
+
+          <div class="form-field">
+
+            <label for="user-department">
+              Department <span>*</span>
+            </label>
+
+            <input
+              id="user-department"
+              type="text"
+              name="department"
+              placeholder="Enter department"
+              maxlength="80"
+              required
+              [value]="userForm().department"
+              (input)="updateFormField(
+                'department',
+                $any($event.target).value
+              )"
+            />
+
+          </div>
+
+          <!-- STATUS -->
+
+          <div class="form-field full-width">
+
+            <label for="user-status">
+              Account Status
+            </label>
+
+            <select
+              id="user-status"
+              name="status"
+              [value]="userForm().status"
+              (change)="updateFormField(
+                'status',
+                $any($event.target).value
+              )"
+            >
+              @for (status of statuses; track status) {
+                <option [value]="status">
+                  {{ status }}
+                </option>
+              }
+            </select>
+
+          </div>
+
+        </div>
+
+        <!-- MODAL FOOTER -->
+
+        <div class="modal-footer">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeUserModal()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+          >
+            <i class="pi pi-check"></i>
+
+            {{ editingUserId() === null
+              ? 'Save User'
+              : 'Update User' }}
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  </div>
+
+}
+
+
+<!-- ========================================= -->
+<!-- DELETE USER CONFIRMATION -->
+<!-- ========================================= -->
+
+@if (deletingUser(); as user) {
+
+  <div
+    class="modal-backdrop"
+    (click)="cancelDelete()"
+  >
+
+    <section
+      class="delete-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="delete-warning-icon">
+        <i class="pi pi-trash"></i>
+      </div>
+
+      <h2 id="delete-modal-title">
+        Delete User?
+      </h2>
+
+      <p>
+        Are you sure you want to delete
+        <strong>{{ user.name }}</strong>?
+        This will remove the user from the sample list.
+      </p>
+
+      <div class="delete-actions">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelDelete()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="deleteUser()"
+        >
+          Delete User
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+}

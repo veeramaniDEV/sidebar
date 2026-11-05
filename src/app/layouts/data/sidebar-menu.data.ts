@@ -1,7 +1,12 @@
+
 import {
   SidebarMenuItem,
   SidebarProject
 } from '../models/sidebar-menu.model';
+
+// ==========================================
+// MENU MODEL
+// ==========================================
 
 interface MenuDefinition {
   label: string;
@@ -9,7 +14,10 @@ interface MenuDefinition {
   children?: MenuDefinition[];
 }
 
-// Leaf menu (navigates to a page)
+// ==========================================
+// MENU HELPERS
+// ==========================================
+
 function page(
   label: string,
   icon = 'pi pi-circle'
@@ -17,7 +25,6 @@ function page(
   return { label, icon };
 }
 
-// Parent menu (expands/collapses)
 function group(
   label: string,
   children: MenuDefinition[],
@@ -34,29 +41,33 @@ function slug(value: string): string {
     .replace(/^-|-$/g, '');
 }
 
+// ==========================================
+// BUILD NESTED ITEMS
+// ==========================================
+
 function buildItems(
   items: MenuDefinition[],
   path: string[]
 ): SidebarMenuItem[] {
 
   return items.map(item => {
+
     const currentPath = [...path, slug(item.label)];
-    const hasChildren = !!item.children?.length;
+
+    if (item.children?.length) {
+      return {
+        id: currentPath.join('-'),
+        label: item.label,
+        icon: item.icon,
+        children: buildItems(item.children, currentPath)
+      };
+    }
 
     return {
       id: currentPath.join('-'),
       label: item.label,
       icon: item.icon,
-      ...(hasChildren
-        ? {
-            children: buildItems(
-              item.children!,
-              currentPath
-            )
-          }
-        : {
-            route: '/app/' + currentPath.join('/')
-          })
+      route: '/app/' + currentPath.join('/')
     };
   });
 }
@@ -67,6 +78,7 @@ function project(
   icon: string,
   items: MenuDefinition[]
 ): SidebarProject {
+
   return {
     id,
     label,
@@ -75,43 +87,37 @@ function project(
   };
 }
 
+// ==========================================
+// PROJECT MENU DEFINITIONS
+// ==========================================
+
 export const SIDEBAR_PROJECTS: SidebarProject[] = [
 
-  // ====================================================
+  // ========================================
   // 1. CONNECT
-  // ====================================================
+  // ========================================
 
   project('connect', 'Connect', 'pi pi-desktop', [
 
     page('Dashboard', 'pi pi-home'),
-
     page('Production', 'pi pi-chart-bar'),
-
     page('Report', 'pi pi-file'),
-
     page('View SOP', 'pi pi-book'),
-
     page('CAPA Tracker', 'pi pi-check-square'),
 
     group('Setting', [
-
-      page('Users List'),
-
-      page('Process Assign'),
-
-      page('Client List'),
-
-      page('Add SOP'),
-
-      page('SPLI')
-
+      page('Users List', 'pi pi-users'),
+      page('Process Assign', 'pi pi-sitemap'),
+      page('Client List', 'pi pi-building'),
+      page('Add SOP', 'pi pi-file-plus'),
+      page('SPLI', 'pi pi-list-check')
     ], 'pi pi-cog')
 
   ]),
 
-  // ====================================================
+  // ========================================
   // 2. CONNECT PORTAL
-  // ====================================================
+  // ========================================
 
   project(
     'connect-portal',
@@ -120,17 +126,12 @@ export const SIDEBAR_PROJECTS: SidebarProject[] = [
     [
 
       page('Dashboard', 'pi pi-home'),
-
       page('Home', 'pi pi-home'),
 
       group('Analytics', [
-
-        page('By Client'),
-
-        page('By Processor'),
-
-        page('Employee Monitor')
-
+        page('By Client', 'pi pi-building'),
+        page('By Processor', 'pi pi-users'),
+        page('Employee Monitor', 'pi pi-desktop')
       ], 'pi pi-chart-bar'),
 
       page('Processes', 'pi pi-sitemap'),
@@ -141,11 +142,8 @@ export const SIDEBAR_PROJECTS: SidebarProject[] = [
       ),
 
       page('Tickets', 'pi pi-ticket'),
-
       page('File Manager', 'pi pi-folder'),
-
       page('Billing', 'pi pi-wallet'),
-
       page('Teams', 'pi pi-users'),
 
       page(
@@ -156,9 +154,9 @@ export const SIDEBAR_PROJECTS: SidebarProject[] = [
     ]
   ),
 
-  // ====================================================
+  // ========================================
   // 3. LEARN HUB
-  // ====================================================
+  // ========================================
 
   project(
     'learn-hub',
@@ -166,64 +164,57 @@ export const SIDEBAR_PROJECTS: SidebarProject[] = [
     'pi pi-book',
     [
 
-      // -----------------------------------------------
+      // ====================================
       // SOFT SKILLS
-      // -----------------------------------------------
+      // ====================================
 
       group('Soft Skills', [
 
         group('Home', [
-
-          page('Dashboard'),
-
-          page('Archives')
-
+          page('Dashboard', 'pi pi-home'),
+          page('Archives', 'pi pi-folder')
         ], 'pi pi-home'),
 
         group('Resource Center (Process Name)', [
 
           group('Interpersonal Skills (Module Name)', [
-
-            page('Email Etiquette (Sub Process)')
-
-          ])
+            page(
+              'Email Etiquette (Sub Process)',
+              'pi pi-envelope'
+            )
+          ], 'pi pi-book')
 
         ], 'pi pi-book'),
 
         group('Soft Skills Training Setting', [
-
-          page('Add and Update Process'),
-
-          page('Add and Update Module'),
-
-          page('Add and Update SubProcess'),
-
-          page('Add and Update Questions'),
-
-          page('View Question and Answer')
-
+          page('Add and Update Process', 'pi pi-sitemap'),
+          page('Add and Update Module', 'pi pi-folder-plus'),
+          page('Add and Update SubProcess', 'pi pi-list'),
+          page(
+            'Add and Update Questions',
+            'pi pi-question-circle'
+          ),
+          page(
+            'View Question and Answer',
+            'pi pi-eye'
+          )
         ], 'pi pi-cog'),
 
         group('Others', [
-
-          page('Assign Video to Users')
-
-        ])
+          page('Assign Video to Users', 'pi pi-video')
+        ], 'pi pi-folder')
 
       ], 'pi pi-users'),
 
-      // -----------------------------------------------
+      // ====================================
       // TECHNICAL SKILLS
-      // -----------------------------------------------
+      // ====================================
 
       group('Technical Skills', [
 
         group('Home', [
-
-          page('Dashboard'),
-
-          page('Pre-Domain')
-
+          page('Dashboard', 'pi pi-home'),
+          page('Pre-Domain', 'pi pi-book')
         ], 'pi pi-home'),
 
         group('Resource Center (Main Menu)', [
@@ -231,165 +222,225 @@ export const SIDEBAR_PROJECTS: SidebarProject[] = [
           group('Tax administration (Sub Menu)', [
 
             group('Basics (Modules)', [
+              page(
+                'Tax Pre Domain (Course)',
+                'pi pi-file'
+              )
+            ], 'pi pi-folder')
 
-              page('Tax Pre Domain (Course)')
-
-            ])
-
-          ])
+          ], 'pi pi-book')
 
         ], 'pi pi-book'),
 
+        // MENU CONFIGURATION
+
         group('Menu Setting', [
-
-          page('Add and Update Main Menu'),
-
-          page('Add and Update Sub Menu'),
-
-          page('Add and Update Modules'),
-
-          page('Add and Update Course Menu')
-
+          page(
+            'Add and Update Main Menu',
+            'pi pi-th-large'
+          ),
+          page(
+            'Add and Update Sub Menu',
+            'pi pi-list'
+          ),
+          page(
+            'Add and Update Modules',
+            'pi pi-folder-plus'
+          ),
+          page(
+            'Add and Update Course Menu',
+            'pi pi-book'
+          )
         ], 'pi pi-cog'),
 
+        // QUESTION MANAGEMENT
+
         group('Add & View QA', [
+          page(
+            'Add Question and Answer',
+            'pi pi-question-circle'
+          ),
+          page(
+            'View & Update QA',
+            'pi pi-eye'
+          )
+        ], 'pi pi-folder-open'),
 
-          page('Add Question and Answer'),
-
-          page('View & Update QA')
-
-        ]),
+        // COURSE ASSIGNMENT
 
         group('Assign Module / Course', [
+          page(
+            'Module Allocation',
+            'pi pi-sitemap'
+          ),
+          page(
+            'Re-assign Course',
+            'pi pi-refresh'
+          ),
+          page(
+            'Assign Next Module',
+            'pi pi-arrow-right'
+          )
+        ], 'pi pi-users'),
 
-          page('Module Allocation'),
-
-          page('Re-assign Course'),
-
-          page('Assign Next Module')
-
-        ]),
+        // REPORTS
 
         group('Report', [
-
-          page('User Performance Scorecard'),
-
-          page('Time Monitor'),
-
-          page('PreDomain Scorecard'),
-
-          page('Users Reports')
-
+          page(
+            'User Performance Scorecard',
+            'pi pi-chart-bar'
+          ),
+          page(
+            'Time Monitor',
+            'pi pi-clock'
+          ),
+          page(
+            'PreDomain Scorecard',
+            'pi pi-chart-line'
+          ),
+          page(
+            'Users Reports',
+            'pi pi-file'
+          )
         ], 'pi pi-chart-bar'),
 
+        // NOTIFICATIONS
+
         group('Notification', [
-
-          page('Update Notification')
-
+          page(
+            'Update Notification',
+            'pi pi-bell'
+          )
         ], 'pi pi-bell'),
 
+        // PROCESS UPDATES
+
         group('Add Updates', [
-
-          page('Process Updates')
-
-        ])
+          page(
+            'Process Updates',
+            'pi pi-pencil'
+          )
+        ], 'pi pi-pencil')
 
       ], 'pi pi-desktop'),
 
-      // -----------------------------------------------
+      // ====================================
       // SECURITY PROTOCOLS
-      // -----------------------------------------------
+      // ====================================
 
       group('Security Protocols', [
 
         group('Home', [
-
-          page('Dashboard'),
-
-          page('Archives')
-
+          page('Dashboard', 'pi pi-home'),
+          page('Archives', 'pi pi-folder')
         ], 'pi pi-home'),
 
         group('Resource Center (Main Menu)', [
 
-          group('Information Technology (Departments)', [
-
-            page('Cybersecurity (Courses)')
-
-          ])
+          group(
+            'Information Technology (Departments)',
+            [
+              page(
+                'Cybersecurity (Courses)',
+                'pi pi-shield'
+              )
+            ],
+            'pi pi-book'
+          )
 
         ], 'pi pi-book'),
 
+        // SECURITY MENU SETTINGS
+
         group('Menu Setting', [
-
-          page('Add and Update Main Menu'),
-
-          page('Add and Update Departments'),
-
-          page('Add and Update Courses')
-
+          page(
+            'Add and Update Main Menu',
+            'pi pi-th-large'
+          ),
+          page(
+            'Add and Update Departments',
+            'pi pi-building'
+          ),
+          page(
+            'Add and Update Courses',
+            'pi pi-book'
+          )
         ], 'pi pi-cog'),
 
+        // SECURITY QA
+
         group('Add & View QA', [
+          page(
+            'Add Question and Answer',
+            'pi pi-question-circle'
+          )
+        ], 'pi pi-folder-open'),
 
-          page('Add Question and Answer')
-
-        ]),
+        // SECURITY REPORTS
 
         group('Report', [
-
-          page('Phishing Awareness Results'),
-
-          page('POSH Awareness Results')
-
+          page(
+            'Phishing Awareness Results',
+            'pi pi-chart-bar'
+          ),
+          page(
+            'POSH Awareness Results',
+            'pi pi-chart-line'
+          )
         ], 'pi pi-chart-bar'),
 
+        // SECURITY UNLOCK
+
         group('Unlock', [
-
-          page('Unlock Access')
-
+          page(
+            'Unlock Access',
+            'pi pi-lock-open'
+          )
         ], 'pi pi-lock-open'),
 
+        // SECURITY NOTIFICATIONS
+
         group('Notification', [
-
-          page('Update Notification')
-
+          page(
+            'Update Notification',
+            'pi pi-bell'
+          )
         ], 'pi pi-bell')
 
       ], 'pi pi-shield'),
 
-      // -----------------------------------------------
+      // ====================================
       // SKILL CHECK
-      // -----------------------------------------------
+      // ====================================
 
       group('Skill Check', [
 
         group('Home', [
-
-          page('Dashboard')
-
+          page('Dashboard', 'pi pi-home')
         ], 'pi pi-home'),
 
         group('Resource Center (Main Menu)', [
-
-          page('Skill Check Assessment (Sub Menu)')
-
+          page(
+            'Skill Check Assessment (Sub Menu)',
+            'pi pi-check-circle'
+          )
         ], 'pi pi-book'),
 
-        page('QA Upload'),
-
-        page('Reports'),
-
-        page('Approve 3rd Attempt')
+        page('QA Upload', 'pi pi-upload'),
+        page('Reports', 'pi pi-chart-bar'),
+        page(
+          'Approve 3rd Attempt',
+          'pi pi-check-circle'
+        )
 
       ], 'pi pi-check-circle')
 
     ]
   ),
 
-  // ====================================================
+  // ========================================
   // 4. BENRECON
-  // ====================================================
+  // ========================================
 
   project(
     'benrecon',
@@ -398,15 +449,10 @@ export const SIDEBAR_PROJECTS: SidebarProject[] = [
     [
 
       page('Dashboard', 'pi pi-home'),
-
       page('Groups', 'pi pi-users'),
-
       page('Entity', 'pi pi-building'),
-
       page('Users', 'pi pi-user'),
-
       page('Setup', 'pi pi-cog'),
-
       page('BenRecon', 'pi pi-file-check')
 
     ]

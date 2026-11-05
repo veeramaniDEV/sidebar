@@ -1,29 +1,17 @@
-// import { Routes } from '@angular/router';
-// export const routes: Routes = [
-//   { path: '', pathMatch: 'full', redirectTo: 'login' },
-//   { path: 'login', title: 'Sign in | CONNECT', loadComponent: () => import('./features/login/login').then(m => m.Login) },
-//   {
-//     path: 'app', loadComponent: () => import('./layouts/landing-layout/landing-layout').then(m => m.LandingLayout), children: [
-//       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-//       { path: 'dashboard', title: 'Dashboard | CONNECT', loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard) },
-//       ...['analytics', 'processes', 'transitions', 'tickets', 'file-manager', 'billing', 'teams', 'performance-score', 'settings'].map(path => ({ path, title: path.replaceAll('-', ' ') + ' | CONNECT', loadComponent: () => import('./features/placeholder/placeholder').then(m => m.Placeholder) }))
-//     ]
-//   },
-//   { path: '**', redirectTo: 'login' }
-// ];
-
-
-
 
 import { Routes } from '@angular/router';
-import { SIDEBAR_PROJECTS } from './layouts/data/sidebar-menu.data';
-import { SidebarMenuItem } from './layouts/models/sidebar-menu.model';
 
+import {
+  SIDEBAR_PROJECTS
+} from './layouts/data/sidebar-menu.data';
 
+import {
+  SidebarMenuItem
+} from './layouts/models/sidebar-menu.model';
 
-// -----------------------------------------------------
-// Generate routes from sidebar menu configuration
-// -----------------------------------------------------
+// ==========================================
+// GENERATE ROUTES FROM SIDEBAR MENUS
+// ==========================================
 
 function createMenuRoutes(
   items: SidebarMenuItem[]
@@ -33,8 +21,13 @@ function createMenuRoutes(
 
   for (const item of items) {
 
-    // Parent menus only expand/collapse.
-    // They don't need their own routes.
+    // ======================================
+    // PARENT MENU
+    // ======================================
+
+    // Parent menus expand/collapse and do not
+    // have their own navigable routes.
+
     if (item.children?.length) {
 
       routes.push(
@@ -44,100 +37,170 @@ function createMenuRoutes(
       continue;
     }
 
+    // Skip items without a route.
     if (!item.route) {
       continue;
     }
 
-    // Convert:
+    // ======================================
+    // CONVERT ROUTE PATH
+    // ======================================
+
+    // Example:
     // /app/connect/production
-    // to:
+    // becomes:
     // connect/production
+
     const routePath = item.route.replace(
       /^\/app\//,
       ''
     );
 
-    // Connect Dashboard uses the real Dashboard component.
+    // ======================================
+    // CONNECT DASHBOARD
+    // ======================================
+
     if (routePath === 'connect/dashboard') {
 
       routes.push({
         path: routePath,
-        title: item.label,
+        title: 'Dashboard | CONNECT',
+
         loadComponent: () =>
-          import('./features/dashboard/dashboard')
-            .then(m => m.Dashboard)
+          import(
+            './features/dashboard/dashboard'
+          ).then(m => m.Dashboard)
       });
 
       continue;
     }
 
-    // Other menu items currently use Placeholder.
+    // ======================================
+    // CONNECT SETTINGS - USERS LIST
+    // ======================================
+
+    if (routePath === 'connect/setting/users-list') {
+
+      routes.push({
+        path: routePath,
+        title: 'Users List | CONNECT',
+
+        data: {
+          pageTitle: 'Users List'
+        },
+
+        loadComponent: () =>
+          import(
+            './features/user-management/pages/users-list/users-list'
+          ).then(m => m.UsersList)
+      });
+
+      continue;
+    }
+
+    // ======================================
+    // ALL OTHER MENU PAGES
+    // ======================================
+
+    // Until other feature components are
+    // implemented, load the Placeholder page.
+
     routes.push({
       path: routePath,
-      title: item.label,
+
+      title: `${item.label} | CONNECT`,
+
       data: {
         pageTitle: item.label
       },
+
       loadComponent: () =>
-        import('./features/placeholder/placeholder')
-          .then(m => m.Placeholder)
+        import(
+          './features/placeholder/placeholder'
+        ).then(m => m.Placeholder)
     });
   }
 
   return routes;
 }
 
-// -----------------------------------------------------
-// Collect all routes from the four sidebar projects
-// -----------------------------------------------------
+// ==========================================
+// COLLECT ALL PROJECT ROUTES
+// ==========================================
 
 const menuRoutes: Routes = SIDEBAR_PROJECTS.flatMap(
   project => createMenuRoutes(project.items)
 );
 
-// -----------------------------------------------------
-// Application routes
-// -----------------------------------------------------
+// ==========================================
+// APPLICATION ROUTES
+// ==========================================
 
 export const routes: Routes = [
 
-  // Default page
+  // ========================================
+  // DEFAULT ROUTE
+  // ========================================
+
   {
     path: '',
     pathMatch: 'full',
     redirectTo: 'login'
   },
 
-  // Login page
+  // ========================================
+  // LOGIN
+  // ========================================
+
   {
     path: 'login',
-    title: 'Login',
+    title: 'Sign in | CONNECT',
+
     loadComponent: () =>
-      import('./features/login/login')
-        .then(m => m.Login)
+      import(
+        './features/login/login'
+      ).then(m => m.Login)
   },
 
-  // Main application layout
+  // ========================================
+  // MAIN LANDING LAYOUT
+  // ========================================
+
   {
     path: 'app',
 
     loadComponent: () =>
-      import('./layouts/landing-layout/landing-layout')
-        .then(m => m.LandingLayout),
+      import(
+        './layouts/landing-layout/landing-layout'
+      ).then(m => m.LandingLayout),
 
     children: [
 
-      // Default application dashboard
+      // ====================================
+      // DEFAULT APP ROUTE
+      // ====================================
+
       {
         path: '',
         pathMatch: 'full',
         redirectTo: 'connect/dashboard'
       },
 
-      // Automatically generated sidebar routes
+      // ====================================
+      // DYNAMIC SIDEBAR ROUTES
+      // ====================================
+
+      // CONNECT
+      // CONNECT PORTAL
+      // LEARN HUB
+      // BENRECON
+
       ...menuRoutes,
 
-      // Legacy dashboard URL compatibility
+      // ====================================
+      // LEGACY DASHBOARD URL
+      // ====================================
+
       {
         path: 'dashboard',
         pathMatch: 'full',
@@ -147,11 +210,13 @@ export const routes: Routes = [
     ]
   },
 
-  // Unknown routes
+  // ========================================
+  // UNKNOWN ROUTES
+  // ========================================
+
   {
     path: '**',
     redirectTo: 'login'
   }
 
 ];
-
